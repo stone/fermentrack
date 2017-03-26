@@ -8,6 +8,7 @@ pages:
   - Install:
     - 'Index': 'install/index.md'
     - 'Raspberry Pi Setup': 'install/Raspi Setup.md'
+    - 'Armbian Installation': 'install/armbian.md'
     - 'Manual Installation': 'install/manual.md'
   - Configuration:
     - 'Configuration': 'config/config.md'
