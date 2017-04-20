@@ -900,6 +900,15 @@ while run:
                 bg_ser.writeln("h{u:-1,v:1}")  # request available, but not installed devices
             time.sleep(5)  # We'll give the controller 5 seconds to respond
             raise socket.timeout
+        
+        elif messageType == "setOta":
+            if value != "":
+                bg_ser.writeln("j{\"setOta\":\"%s\"}" % value.rstrip())
+            else:
+                logMessage("setOta: value empty..")
+        
+        elif messageType == "getOta":
+            bg_ser.writeln("o")
 
         else:
             logMessage("Error: Received invalid message on socket: " + message)
@@ -1038,6 +1047,9 @@ while run:
                         logMessage("Installed devices received: " + json.dumps(deviceList['installed']).encode('utf-8'))
                     elif line[0] == 'U':
                         logMessage("Device updated to: " + line[2:])
+                    elif line[0] == 'O':
+                        logMessage("Request for getOTA: {}\n".format(line))
+                        conn.send(line[2:])
                     else:
                         logMessage("Cannot process line from controller: " + line)
                     # end or processing a line
