@@ -896,16 +896,16 @@ class BrewPiDevice(models.Model):
         try:
             ota_url = json.loads(self.send_message("getOta", read_response=True))
         except:
-            logger.debug("error during getOta", exc_info=True)
             return None
         return ota_url
     
-    def set_ota(self):
+    def set_ota(self, url):
         """Set new OTA update URL"""
         try:
-            self.send_message("setOta", self.ota_url, read_response=False)
+            ota_url = json.loads(self.send_message("setOta", url, read_response=True))
         except:
-            logger.debug("error setting getOta", exc_info=True)
+            return None
+        return ota_url
 
     def get_cached_ip(self, save_to_cache=True):
         # I really hate the name of the function, but I can't think of anything else. This basically does three things:
