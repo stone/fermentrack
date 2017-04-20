@@ -872,6 +872,22 @@ class BrewPiDevice(models.Model):
         circus_device_name = "dev-{}".format(self.device_name)
         status = fc.application_status(name=circus_device_name)
         return status
+    
+    def retrieve_ota(self):
+        """Get current OTA update URL"""
+        try:
+            ota_url = json.loads(self.send_message("getOta", read_response=True))
+        except:
+            return None
+        return ota_url
+    
+    def set_ota(self, url):
+        """Set new OTA update URL"""
+        try:
+            ota_url = json.loads(self.send_message("setOta", url, read_response=True))
+        except:
+            return None
+        return ota_url
 
 
 class Beer(models.Model):
