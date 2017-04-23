@@ -101,7 +101,7 @@ def add_device(request):
             new_device.save()
             new_device.set_ota()
 
-            messages.success(request, 'Device {} Added.<br>Please wait a few seconds for controller to start'.format(new_device.device_name))
+            messages.success(request, u'Device {} Added.<br>Please wait a few seconds for controller to start'.format(new_device))
             return redirect("/")
 
         else:
@@ -149,7 +149,7 @@ def device_control_constants_legacy(request, device_id, control_constants):
             # TODO - Make it so if we added a preset name we save the new preset
             # new_device.save()
 
-            messages.success(request, 'Control constants updated for device {}'.format(active_device.device_name))
+            messages.success(request, u'Control constants updated for device {}'.format(active_device))
             return redirect("/")
 
         else:
@@ -174,7 +174,7 @@ def device_control_constants(request, device_id):
 
     if control_constants is None:
         # We weren't able to retrieve the version from the controller.
-        messages.error(request, "Unable to reach brewpi-script for device {}".format(active_device.device_name))
+        messages.error(request, u"Unable to reach brewpi-script for device {}".format(active_device))
         return redirect('device_dashboard', device_id=device_id)
 
     elif is_legacy:
@@ -321,7 +321,7 @@ def device_temp_control(request, device_id):
                 return redirect('siteroot')
 
             if success:
-                messages.success(request, 'Temperature control settings updated for {}. Please wait a few seconds for settings to take effect.'.format(active_device.device_name))
+                messages.success(request, u'Temperature control settings updated for {}. Please wait a few seconds for settings to take effect.'.format(active_device))
                 if active_device.active_beer is None:
                     # We started temperature control, but aren't logging anything. Prompt the user.
                     messages.info(request, 'Temperature control enabled, but logging is off. Start a new beer from the device dashboard.')
@@ -329,7 +329,7 @@ def device_temp_control(request, device_id):
                     # We altered temperature control, but logging is paused. Prompt the user.
                     messages.info(request, 'Temperature control enabled, but logging is off. Start a new beer from the device dashboard.')
             else:
-                messages.error(request, 'Unable to update temperature control settings for {}'.format(active_device.device_name))
+                messages.error(request, u'Unable to update temperature control settings for {}'.format(active_device))
 
             return redirect('siteroot')
 
@@ -482,7 +482,7 @@ def device_control_constants_legacy(request, device_id, control_constants):
             # TODO - Make it so if we added a preset name we save the new preset
             # new_device.save()
 
-            messages.success(request, 'Control constants updated for device {}'.format(active_device.device_name))
+            messages.success(request, u'Control constants updated for device {}'.format(active_device))
             return redirect("/")
 
         else:
@@ -508,7 +508,7 @@ def device_eeprom_reset(request, device_id):
 
     if control_constants is None:
         # We weren't able to retrieve the version from the controller.
-        messages.error(request, "Unable to reach brewpi-script for device {}".format(active_device.device_name))
+        messages.error(request, u"Unable to reach brewpi-script for device {}".format(active_device))
         return redirect('device_dashboard', device_id=device_id)
     else:
         active_device.reset_eeprom()
@@ -614,7 +614,8 @@ def device_uninstall(request, device_id):
     if request.POST:
         if 'remove_1' in request.POST and 'remove_2' in request.POST and 'remove_3' in request.POST:
             if request.POST['remove_1'] == "on" and request.POST['remove_2'] == "on" and request.POST['remove_3'] == "on":
-                messages.success(request, "The device '{}' was successfully uninstalled.".format(active_device.device_name))
+                # messages.success(request, "The device '" + unicode(active_device) + "' was successfully uninstalled.")
+                messages.success(request, u"The device '{}' was successfully uninstalled.".format(active_device))
                 active_device.delete()
                 # TODO - Trigger Circus to reload properly, rather than using an external script
                 # As stone noted - this isn't needed as Circus will autodetect if a controller was removed and kill
