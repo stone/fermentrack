@@ -562,12 +562,9 @@ def device_manage(request, device_id):
             if need_set_ota:
                 active_device.set_ota()
 
-            messages.success(request, 'Device ' + unicode(active_device.device_name) +
-                             ' Updated.<br>Please wait a few seconds for the connection to restart')
+            messages.success(request, u'Device {} Updated.<br>Please wait a few seconds for the connection to restart'.format(active_device))
 
-            # TODO - Trigger Circus to reload properly, rather than using an external script
-            cmd = "nohup utils/reset_circus.sh"
-            subprocess.call(cmd, shell=True)
+            active_device.restart_process()
 
             return render_with_devices(request, template_name='device_manage.html',
                                        context={'form': form, 'active_device': active_device})
