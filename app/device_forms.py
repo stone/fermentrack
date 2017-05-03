@@ -65,6 +65,11 @@ class DeviceForm(forms.Form):
     wifi_port = forms.IntegerField(initial=23, min_value=10, max_value=65536, required=False,
                                    help_text="The internet port to use (almost always 23)",
                                    widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: 1222'}))
+    ota_url = forms.CharField(
+        max_length=128, required=False,
+        help_text="ip/hostname and path used for http-based Over The Air upgrades, without http://, leave empty to disable",
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: 1222'})
+    )
 
     def clean(self):
         cleaned_data = self.cleaned_data
