@@ -95,9 +95,11 @@ def add_device(request):
                 connection_type=form.cleaned_data['connection_type'],
                 wifi_host=form.cleaned_data['wifi_host'],
                 wifi_port=form.cleaned_data['wifi_port'],
+                ota_url=form.cleaned_data['ota_url'],
             )
 
             new_device.save()
+            new_device.set_ota()
 
             messages.success(request, 'Device {} Added.<br>Please wait a few seconds for controller to start'.format(new_device.device_name))
             return redirect("/")
@@ -534,8 +536,10 @@ def device_manage(request, device_id):
     # Forms posted back to device_manage are explicitly settings update forms
     if request.POST:
         form = device_forms.DeviceForm(request.POST)
-
+        need_set_ota = False
         if form.is_valid():
+            if active_device.ota_url != form.cleaned_data['ota_url']:
+                need_set_ota = True
             # Update the device settings based on what we were passed via the form
             active_device.device_name=form.cleaned_data['device_name']
             active_device.temp_format=form.cleaned_data['temp_format']
@@ -551,8 +555,12 @@ def device_manage(request, device_id):
             active_device.connection_type=form.cleaned_data['connection_type']
             active_device.wifi_host=form.cleaned_data['wifi_host']
             active_device.wifi_port=form.cleaned_data['wifi_port']
+            active_device.ota_url=form.cleaned_data['ota_url']
 
             active_device.save()
+            
+            if need_set_ota:
+                active_device.set_ota()
 
             messages.success(request, 'Device ' + unicode(active_device.device_name) +
                              ' Updated.<br>Please wait a few seconds for the connection to restart')
@@ -584,6 +592,7 @@ def device_manage(request, device_id):
             'socket_name': active_device.socket_name,
             'wifi_host': active_device.wifi_host,
             'wifi_port': active_device.wifi_port,
+            'ota_url': active_device.ota_url,
         }
 
         form = device_forms.DeviceForm(initial=initial_values)
