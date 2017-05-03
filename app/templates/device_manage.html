@@ -36,6 +36,7 @@
     </table>
 
 
+
 <h3 class="page-header">Update Device Settings</h3>
 
 <form action="{% url "device_manage" active_device.id %}" class="form-horizontal" method="post">{% csrf_token %}
@@ -46,8 +47,8 @@
         {% form_generic form.temp_format %}
         {% form_generic form.data_point_log_interval %}
         {% form_generic form.board_type %}
+        {% form_generic form.ota_url %}
     </div>
-
 
     <div id="inetSocketSection">
         <h4 class="form-header">Connect Interface to Script</h4>
@@ -80,6 +81,7 @@
 
     <input type="submit" value="Submit" class="btn btn-primary" />
 </form>
+
 
 
 
