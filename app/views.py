@@ -99,6 +99,7 @@ def add_device(request):
                 wifi_port=form.cleaned_data['wifi_port'],
                 ota_url=form.cleaned_data['ota_url'],
                 prefer_connecting_via_udev=form.cleaned_data['prefer_connecting_via_udev'],
+                ota_url=form.cleaned_data['ota_url'],
             )
 
             new_device.save()
