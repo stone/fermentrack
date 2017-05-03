@@ -473,6 +473,12 @@ class BrewPiDevice(models.Model):
     # The time the fermentation profile was applied (all our math is based on this)
     time_profile_started = models.DateTimeField(null=True, blank=True, default=None)
 
+    # ESP8266 Over The Air Update URL, normally this should be the host running fermentrack
+    ota_url = models.CharField(
+        max_length=128, null=True, default=None,
+        help_text="ip/hostname and path used for Over The Air upgrades"
+        )
+
     def get_profile_temp(self):
         # If the object is inconsistent, don't return anything
         if self.active_profile is None:
@@ -878,16 +884,16 @@ class BrewPiDevice(models.Model):
         try:
             ota_url = json.loads(self.send_message("getOta", read_response=True))
         except:
+            logger.debug("error during getOta", exc_info=True)
             return None
         return ota_url
     
-    def set_ota(self, url):
+    def set_ota(self):
         """Set new OTA update URL"""
         try:
-            ota_url = json.loads(self.send_message("setOta", url, read_response=True))
+            self.send_message("setOta", self.ota_url, read_response=False)
         except:
-            return None
-        return ota_url
+            logger.debug("error setting getOta", exc_info=True)
 
 
 class Beer(models.Model):
