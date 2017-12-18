@@ -88,7 +88,7 @@ circusctl stop &>> upgrade.log
 # Pull the latest version of the script from GitHub
 printinfo "Updating from git..."
 cd ~/fermentrack  # Assuming the directory based on a normal install with Fermentrack-tools
-git fetch &>> upgrade.log
+git fetch --prune &>> upgrade.log
 git reset --hard &>> upgrade.log
 
 # If we have a tag set, use it
@@ -104,7 +104,7 @@ git pull &>> upgrade.log
 
 # Install everything from requirements.txt
 printinfo "Updating requirements via pip..."
-pip install -r requirements.txt --upgrade &>> upgrade.log
+pip install -U -r requirements.txt --upgrade &>> upgrade.log
 
 # Migrate to create/adjust anything necessary in the database
 printinfo "Running manage.py migrate..."
